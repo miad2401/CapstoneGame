@@ -34,7 +34,8 @@ public partial class Main : Node2D
 	double growthVal;
 
 	[Export] TileMap regionMap;
-	struct ResourceNode { int xPos; int yPos; bool activated; bool worked;
+	//TODO: Change the resourceNode struct to include different types of resources.
+	struct ResourceNode { public int xPos; public int yPos; public bool activated; public bool worked;
 		public ResourceNode(int x, int y, bool active, bool working)
 		{
 			xPos = x; yPos = y; activated = active; worked = working;
@@ -63,9 +64,13 @@ public partial class Main : Node2D
 	{
 		//TODO: Finish Logic
 		//Check for enabled resource nodes and then check to see if they are being worked
-
-		//If both are a go then update resource accordingly
-
+		foreach(ResourceNode node in resourceNodes)
+		{
+			if(node.activated == true && node.worked)
+			{
+				// Update according resource
+			}
+		}
 	}
 
 	//Change Label Data
@@ -81,7 +86,55 @@ public partial class Main : Node2D
 			case "Stone":
 				Stone.Text = value.ToString();
 				break;
-				//TODO: Finsh this switch
+			case "Copper":
+				Copper.Text = value.ToString();
+                break;
+            case "steel":
+				Steel.Text = value.ToString();
+                break;
+            case "fuel":
+				Fuel.Text = value.ToString();
+                break;
+            case "food":
+				Food.Text = value.ToString();
+                break;
+            case "water":
+				Water.Text = value.ToString();
+                break;
+            case "weapon":
+				Weapons.Text = value.ToString();
+                break;
+            case "leisure":
+				Leisure.Text = value.ToString();
+                break;
+            case "totalPop":
+				TotalPop.Text = value.ToString();
+                break;
+            case "employedPop":
+				EmployedPop.Text = value.ToString();
+                break;
+            case "growth":
+				Growth.Text = value.ToString();
+                break;
+        }
+	}
+
+	//Change resource node data
+	public void UpdateResourceNode(int xPos, int yPos, String updatePrefix, bool data)
+	{
+		foreach(ResourceNode node in resourceNodes)
+		{
+			if (node.xPos == xPos)
+			{
+				if (node.yPos == yPos)
+				{
+					//Updatedata will have 2 prefixes, A- and W- meaning active and worked
+					if (updatePrefix.StartsWith("A-"))
+					{
+						node.activated = data;
+					}
+				}
+			}
 		}
 	}
 }
