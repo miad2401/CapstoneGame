@@ -11,5 +11,15 @@ public partial class RegionMapHandler : TileMap
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+
 	}
+    public override void _UnhandledInput(InputEvent mevent)
+    {
+		GetViewport().SetInputAsHandled();
+        base._UnhandledInput(mevent);
+		if(mevent.GetType() == typeof(InputEventMouseButton))
+        {
+			
+        }
+    }
 }

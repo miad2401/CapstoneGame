@@ -122,8 +122,9 @@ public partial class Main : Node2D
 	//Change resource node data
 	public void UpdateResourceNode(int xPos, int yPos, String updatePrefix, bool data)
 	{
-		foreach(ResourceNode node in resourceNodes)
+		for(int i = 0; i < resourceNodes.Count; i++)
 		{
+			ResourceNode node = (ResourceNode) resourceNodes[i];
 			if (node.xPos == xPos)
 			{
 				if (node.yPos == yPos)
@@ -132,7 +133,10 @@ public partial class Main : Node2D
 					if (updatePrefix.StartsWith("A-"))
 					{
 						node.activated = data;
-					}
+					} else if (updatePrefix.StartsWith("W-"))
+                    {
+						node.worked = data;
+                    }
 				}
 			}
 		}
