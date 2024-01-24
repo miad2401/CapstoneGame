@@ -36,58 +36,28 @@ public partial class BuildItemList : ItemList
 			Clear();
 		}
 		currentCell = main.GetCurrCell();
-		if(GetParentControl() != null && GetParentControl().Visible)
+		Vector2I currAtlasCoords = map.GetCellAtlasCoords(0, currentCell);
+
+		if (GetParentControl() != null && GetParentControl().Visible)
 		{
 			if (!listPopulated)
 			{
 				//First check what terrain type the cell is
-				if (map.GetCellAtlasCoords(0, currentCell) == grassCell)
+				if (currAtlasCoords == grassCell)
 				{
-					foreach (BuildingTemplate building in buildingList)
-					{
-						List<int> validterrain = building.ValidTerrainID;
-						if (validterrain.Contains(grassCell.X))
-						{
-							//TODO: Add icons
-							AddItem(building.Name1, null, true);
-						}
-					}
+					PopulateListForTerrain(grassCell);
 				}
-				else if (map.GetCellAtlasCoords(1, currentCell) == mountainCell)
+				else if (currAtlasCoords == mountainCell)
 				{
-					foreach (BuildingTemplate building in buildingList)
-					{
-						List<int> validterrain = building.ValidTerrainID;
-						if (validterrain.Contains(mountainCell.X))
-						{
-							//TODO: Add icons
-							AddItem(building.Name1, null, true);
-						}
-					}
+					PopulateListForTerrain(mountainCell);
 				}
-				else if (map.GetCellAtlasCoords(1, currentCell) == riverCell)
+				else if (currAtlasCoords == riverCell)
 				{
-					foreach (BuildingTemplate building in buildingList)
-					{
-						List<int> validterrain = building.ValidTerrainID;
-						if (validterrain.Contains(riverCell.X))
-						{
-							//TODO: Add icons
-							AddItem(building.Name1, null, true);
-						}
-					}
+					PopulateListForTerrain(riverCell);
 				}
-				else if (map.GetCellAtlasCoords(1, currentCell) == plainsCell)
+				else if (currAtlasCoords == plainsCell)
 				{
-					foreach (BuildingTemplate building in buildingList)
-					{
-						List<int> validterrain = building.ValidTerrainID;
-						if (validterrain.Contains(plainsCell.X))
-						{
-							//TODO: Add icons
-							AddItem(building.Name1, null, true);
-						}
-					}
+					PopulateListForTerrain(plainsCell);
 				}//Then check if there is a resource on that cell as well
 
 				if (map.GetCellAtlasCoords(1, currentCell) == resourceCell)
@@ -95,6 +65,19 @@ public partial class BuildItemList : ItemList
 
 				}
 				listPopulated = true;
+			}
+		}
+	}
+
+	private void PopulateListForTerrain(Vector2I atlasCoords)
+	{
+		foreach (BuildingTemplate building in buildingList)
+		{
+			List<int> validterrain = building.ValidTerrainID;
+			if (validterrain.Contains(atlasCoords.X))
+			{
+				//TODO: Add icons
+				AddItem(building.ToString(), null, true);
 			}
 		}
 	}
