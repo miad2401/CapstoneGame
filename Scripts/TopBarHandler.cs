@@ -3,9 +3,9 @@ using System;
 
 public partial class TopBarHandler : TabBar
 {
-	[Export] Panel GovernmentPanel;
-	[Export] Panel LawPanel;
-	[Export] Panel ResearchPanel;
+	[Export] PanelContainer GovernmentPanel;
+	[Export] PanelContainer LawPanel;
+	[Export] PanelContainer ResearchPanel;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -20,8 +20,11 @@ public partial class TopBarHandler : TabBar
 		{
 			case 0:
 				GovernmentPanel.Visible = false;
+				GovernmentPanel.MouseFilter = MouseFilterEnum.Ignore;
 				LawPanel.Visible = false;
+				LawPanel.MouseFilter = MouseFilterEnum.Ignore;
 				ResearchPanel.Visible = false;
+				ResearchPanel.MouseFilter = MouseFilterEnum.Ignore;
 				break;
 			case 1:
 				GovernmentPanel.Visible = true;

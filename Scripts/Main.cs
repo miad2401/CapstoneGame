@@ -1,11 +1,13 @@
 using Godot;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public partial class Main : Node2D
 {
-	//Labels
-	[Export] Label Wood;
+	#region fields
+    //Labels
+    [Export] Label Wood;
 	[Export] Label Stone;
 	[Export] Label Copper;
 	[Export] Label Steel;
@@ -18,6 +20,8 @@ public partial class Main : Node2D
 	[Export] Label TotalPop;
 	[Export] Label EmployedPop;
 	[Export] Label Growth;
+
+	[Export] Label TileData;
 
 	//Values
 	int woodVal;
@@ -43,20 +47,28 @@ public partial class Main : Node2D
 	};
 	ArrayList resourceNodes = new ArrayList();
 
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+	private Vector2I currCell = new Vector2I();
+
+	public List<BuildingTemplate> buildingList = new List<BuildingTemplate>();
+
+    #endregion
+
+    // Called when the node enters the scene tree for the first time.
+    public override void _Ready()
 	{
 		//Here we would set our inital values for our resources, based on difficulty selected.
 
 		//Also populate our list of resource nodes with all current resource nodes
 		Vector2I resourceAtlasLocation = new Vector2I(4, 0);
-		Godot.Collections.Array<Vector2I> resourceArray = regionMap.GetUsedCellsById(0, 0, resourceAtlasLocation);
+		Godot.Collections.Array<Vector2I> resourceArray = regionMap.GetUsedCellsById(1, 0, resourceAtlasLocation);
 
 		foreach(Vector2I cell in resourceArray)
 		{
 			ResourceNode currNode = new ResourceNode(cell.X, cell.Y, false, false);
 			resourceNodes.Add(currNode);
 		}
+
+		//Create Building directory
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -88,35 +100,42 @@ public partial class Main : Node2D
 				break;
 			case "Copper":
 				Copper.Text = value.ToString();
-                break;
-            case "steel":
+				break;
+			case "steel":
 				Steel.Text = value.ToString();
-                break;
-            case "fuel":
+				break;
+			case "fuel":
 				Fuel.Text = value.ToString();
-                break;
-            case "food":
+				break;
+			case "food":
 				Food.Text = value.ToString();
-                break;
-            case "water":
+				break;
+			case "water":
 				Water.Text = value.ToString();
-                break;
-            case "weapon":
+				break;
+			case "weapon":
 				Weapons.Text = value.ToString();
-                break;
-            case "leisure":
+				break;
+			case "leisure":
 				Leisure.Text = value.ToString();
-                break;
-            case "totalPop":
+				break;
+			case "totalPop":
 				TotalPop.Text = value.ToString();
-                break;
-            case "employedPop":
+				break;
+			case "employedPop":
 				EmployedPop.Text = value.ToString();
-                break;
-            case "growth":
+				break;
+			case "growth":
 				Growth.Text = value.ToString();
-                break;
-        }
+				break;
+		}
+	}
+
+	//Update tile data label
+	public void UpdateTileData(string data, Vector2I cellCoords)
+	{
+		TileData.Text = data;
+		SetCurrCell(cellCoords);
 	}
 
 	//Change resource node data
@@ -134,11 +153,24 @@ public partial class Main : Node2D
 					{
 						node.activated = data;
 					} else if (updatePrefix.StartsWith("W-"))
-                    {
+					{
 						node.worked = data;
-                    }
+					}
 				}
 			}
 		}
+	}
+
+
+
+	// Current cell getter and setter
+	public Vector2I GetCurrCell()
+	{
+		return currCell;
+	}
+
+	public void SetCurrCell(Vector2I newCoords)
+	{
+		currCell = newCoords;
 	}
 }
