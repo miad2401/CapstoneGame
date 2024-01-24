@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class BuildingTemplate : Node
 {
@@ -10,6 +11,8 @@ public partial class BuildingTemplate : Node
     private string type;
     private int resource;
     private int techUnlock;
+    private List<int> validTerrainID;
+    private int bonus;
 
     /// <summary>
     /// Template for buildings
@@ -25,6 +28,10 @@ public partial class BuildingTemplate : Node
         this.type = "General";
         this.resource = 0;
         this.techUnlock = 0;
+        this.validTerrainID = new List<int>();
+        this.bonus = 0;
+
+        validTerrainID.Add(0);
     }
 
     /// <summary>
@@ -37,7 +44,7 @@ public partial class BuildingTemplate : Node
     /// <param name="type">Type of building</param>
     /// <param name="resource">Resource value</param>
     /// <param name="techUnlock">Unlocking tech ID</param>
-    public BuildingTemplate(string name, string description, bool active, int jobs, string type, int resource, int techUnlock)
+    public BuildingTemplate(string name, string description, bool active, int jobs, string type, int resource, int techUnlock, List<int> validTerrain, int bonus)
     {
         this.name = name;
         this.description = description;
@@ -46,6 +53,8 @@ public partial class BuildingTemplate : Node
         this.type = type;
         this.resource = resource;
         this.techUnlock = techUnlock;
+        this.validTerrainID = validTerrain;
+        this.bonus = bonus;
     }
 
     public string Name1 { get => name; set => name = value; }
@@ -55,4 +64,5 @@ public partial class BuildingTemplate : Node
     public string Type { get => type; set => type = value; }
     public int Resource { get => resource; set => resource = value; }
     public int TechUnlock { get => techUnlock; set => techUnlock = value; }
+    public List<int> ValidTerrainID { get => validTerrainID; set => validTerrainID = value; }
 }

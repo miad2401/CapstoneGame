@@ -6,8 +6,8 @@ using System.Collections.Generic;
 public partial class Main : Node2D
 {
 	#region fields
-    //Labels
-    [Export] Label Wood;
+	//Labels
+	[Export] Label Wood;
 	[Export] Label Stone;
 	[Export] Label Copper;
 	[Export] Label Steel;
@@ -51,10 +51,10 @@ public partial class Main : Node2D
 
 	public List<BuildingTemplate> buildingList = new List<BuildingTemplate>();
 
-    #endregion
+	#endregion
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
+	// Called when the node enters the scene tree for the first time.
+	public override void _Ready()
 	{
 		//Here we would set our inital values for our resources, based on difficulty selected.
 
@@ -69,6 +69,7 @@ public partial class Main : Node2D
 		}
 
 		//Create Building directory
+		createBuildingList();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -172,5 +173,31 @@ public partial class Main : Node2D
 	public void SetCurrCell(Vector2I newCoords)
 	{
 		currCell = newCoords;
+	}
+
+	private void createBuildingList()
+	{
+		//Add list of buildings by tech
+
+		//Tech 0
+		BuildingTemplate Farm = new BuildingTemplate("Farm", "Gives a set amount of food, varied on placement");
+		BuildingTemplate Pasture = new BuildingTemplate("Pasture", "Gives a set amount of food, varied on placement");
+		BuildingTemplate Lumbermill = new BuildingTemplate("Lumbermill", "Produces a set amount of lumber");
+		BuildingTemplate Mine = new BuildingTemplate("Mine", "Produces a set amount of either stone or ore, depending on placement");
+		BuildingTemplate Quarry = new BuildingTemplate("Quarry", "Produces a set amount of stone");
+		BuildingTemplate Library = new BuildingTemplate("Library", "The first building that produces science and entertainment");
+
+		buildingList.Add(Farm);
+		buildingList.Add(Pasture);
+		buildingList.Add(Lumbermill);
+		buildingList.Add(Mine);	
+		buildingList.Add(Quarry);
+		buildingList.Add(Library);
+
+		//Tech 1
+
+		//Tech 2
+
+		//Tech 3
 	}
 }

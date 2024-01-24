@@ -18,10 +18,11 @@ public partial class RegionMapHandler : TileMap
 
 	}
 
-	public override void _Input(InputEvent mevent)
+	public override void _UnhandledInput(InputEvent mevent)
 	{
 		base._Input(mevent);
 		TileMap map = this;
+		GetViewport().SetInputAsHandled();
 		if (mevent.GetType() == typeof(InputEventMouseButton) && mevent.IsPressed())
 		{
 			//Get cell position from mouse position and then check what type of type was clicked.

@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://b31ycem6heigh"]
+[gd_scene load_steps=9 format=3 uid="uid://b31ycem6heigh"]
 
 [ext_resource type="Script" path="res://Scripts/Main.cs" id="1_87qso"]
 [ext_resource type="Texture2D" uid="uid://csqcsmen4s5xn" path="res://Assets/Art/TileMaps/Tilemapv1.png" id="1_ej31x"]
 [ext_resource type="Script" path="res://Scripts/TopBarHandler.cs" id="1_ptphb"]
 [ext_resource type="Script" path="res://Scripts/RegionMapHandler.cs" id="2_q5yrs"]
 [ext_resource type="Script" path="res://Scripts/BuildButtonHandler.cs" id="3_ldlt2"]
+[ext_resource type="Script" path="res://Scripts/BuildItemList.cs" id="4_s26rl"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4whnp"]
 resource_name = "Base"
@@ -223,6 +224,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="BuildPanel" type="PanelContainer" parent="UI/Panels"]
+visible = false
 layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
@@ -231,6 +233,10 @@ anchor_bottom = 1.0
 offset_left = -300.0
 grow_horizontal = 0
 grow_vertical = 2
+
+[node name="BuildItemList" type="ItemList" parent="UI/Panels/BuildPanel"]
+layout_mode = 2
+script = ExtResource("4_s26rl")
 
 [node name="Map" type="Node" parent="."]
 

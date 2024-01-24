@@ -20,26 +20,35 @@ public partial class TopBarHandler : TabBar
 		{
 			case 0:
 				GovernmentPanel.Visible = false;
-				GovernmentPanel.MouseFilter = MouseFilterEnum.Ignore;
 				LawPanel.Visible = false;
-				LawPanel.MouseFilter = MouseFilterEnum.Ignore;
 				ResearchPanel.Visible = false;
+				GovernmentPanel.MouseFilter = MouseFilterEnum.Ignore;
+				LawPanel.MouseFilter = MouseFilterEnum.Ignore;
 				ResearchPanel.MouseFilter = MouseFilterEnum.Ignore;
 				break;
 			case 1:
 				GovernmentPanel.Visible = true;
 				LawPanel.Visible = false;
 				ResearchPanel.Visible = false;
+				GovernmentPanel.MouseFilter = MouseFilterEnum.Stop;
+				LawPanel.MouseFilter = MouseFilterEnum.Ignore;
+				ResearchPanel.MouseFilter = MouseFilterEnum.Ignore;
 				break;
 			case 2:
 				GovernmentPanel.Visible = false;
 				LawPanel.Visible = true;
 				ResearchPanel.Visible = false;
+				GovernmentPanel.MouseFilter = MouseFilterEnum.Ignore;
+				LawPanel.MouseFilter = MouseFilterEnum.Stop;
+				ResearchPanel.MouseFilter = MouseFilterEnum.Ignore;
 				break;
 			case 3:
 				GovernmentPanel.Visible = false;
 				LawPanel.Visible = false;
 				ResearchPanel.Visible = true;
+				GovernmentPanel.MouseFilter = MouseFilterEnum.Ignore;
+				LawPanel.MouseFilter = MouseFilterEnum.Ignore;
+				ResearchPanel.MouseFilter = MouseFilterEnum.Stop;
 				break;
 		}
 	}
