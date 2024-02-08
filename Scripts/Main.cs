@@ -39,7 +39,6 @@ public partial class Main : Node2D
 	double growthVal;
 
 	[Export] TileMap regionMap;
-	//TODO: Change the resourceNode struct to include different types of resources.
 	struct ResourceNode { public int xPos; public int yPos; public bool activated; public bool worked; public string type;
 		public ResourceNode(int x, int y, bool active, bool working, string resType)
 		{
@@ -57,41 +56,41 @@ public partial class Main : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-        //Here we would set our inital values for our resources, based on difficulty selected.
+		//Here we would set our inital values for our resources, based on difficulty selected.
 
-        //Also populate our list of resource nodes with all current resource nodes
-        Vector2I woodResource = new Vector2I(0, 2);
-        Vector2I stoneResource = new Vector2I(1, 2);
-        Vector2I copperResource = new Vector2I(2, 2);
-        Vector2I steelResource = new Vector2I(3, 2);
-        Godot.Collections.Array<Vector2I> resourceWoodArray = regionMap.GetUsedCellsById(1, 0, woodResource);
-        Godot.Collections.Array<Vector2I> resourceStoneArray = regionMap.GetUsedCellsById(1, 0, stoneResource);
-        Godot.Collections.Array<Vector2I> resourceCopperArray = regionMap.GetUsedCellsById(1, 0, copperResource);
-        Godot.Collections.Array<Vector2I> resourceSteelArray = regionMap.GetUsedCellsById(1, 0, steelResource);
+		//Also populate our list of resource nodes with all current resource nodes
+		Vector2I woodResource = new Vector2I(0, 2);
+		Vector2I stoneResource = new Vector2I(1, 2);
+		Vector2I copperResource = new Vector2I(2, 2);
+		Vector2I steelResource = new Vector2I(3, 2);
+		Godot.Collections.Array<Vector2I> resourceWoodArray = regionMap.GetUsedCellsById(1, 0, woodResource);
+		Godot.Collections.Array<Vector2I> resourceStoneArray = regionMap.GetUsedCellsById(1, 0, stoneResource);
+		Godot.Collections.Array<Vector2I> resourceCopperArray = regionMap.GetUsedCellsById(1, 0, copperResource);
+		Godot.Collections.Array<Vector2I> resourceSteelArray = regionMap.GetUsedCellsById(1, 0, steelResource);
 
-        foreach (Vector2I cell in resourceWoodArray)
+		foreach (Vector2I cell in resourceWoodArray)
 		{
 			ResourceNode currNode = new ResourceNode(cell.X, cell.Y, false, false, "Wood");
 			resourceNodes.Add(currNode);
 		}
-        foreach (Vector2I cell in resourceStoneArray)
-        {
-            ResourceNode currNode = new ResourceNode(cell.X, cell.Y, false, false, "Stone");
-            resourceNodes.Add(currNode);
-        }
-        foreach (Vector2I cell in resourceCopperArray)
-        {
-            ResourceNode currNode = new ResourceNode(cell.X, cell.Y, false, false, "Copper");
-            resourceNodes.Add(currNode);
-        }
-        foreach (Vector2I cell in resourceSteelArray)
-        {
-            ResourceNode currNode = new ResourceNode(cell.X, cell.Y, false, false, "Steel");
-            resourceNodes.Add(currNode);
-        }
+		foreach (Vector2I cell in resourceStoneArray)
+		{
+			ResourceNode currNode = new ResourceNode(cell.X, cell.Y, false, false, "Stone");
+			resourceNodes.Add(currNode);
+		}
+		foreach (Vector2I cell in resourceCopperArray)
+		{
+			ResourceNode currNode = new ResourceNode(cell.X, cell.Y, false, false, "Copper");
+			resourceNodes.Add(currNode);
+		}
+		foreach (Vector2I cell in resourceSteelArray)
+		{
+			ResourceNode currNode = new ResourceNode(cell.X, cell.Y, false, false, "Steel");
+			resourceNodes.Add(currNode);
+		}
 
-        //Create Building directory
-        createBuildingList();
+		//Create Building directory
+		createBuildingList();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -207,6 +206,7 @@ public partial class Main : Node2D
 	private void createBuildingList()
 	{
 		//Add list of buildings by tech
+		//TODO: Change building list to read from building list file which would have all building data rather than hard code
 		//TODO: Add rest of building data
 		//Tech 0
 		List<int> genericValidTerrain = new List<int>();
@@ -216,6 +216,8 @@ public partial class Main : Node2D
 		ArrayList farmCosts = new ArrayList();
 		farmCosts.Add(10);//10 wood
 		farmCosts.Add(10);//10 stone
+
+
 
 		BuildingTemplate Farm = new BuildingTemplate("Farm", "Gives a set amount of food, varied on placement", false, 2, "Gatherer", 6, 0, genericValidTerrain, 2, farmCosts);
 		BuildingTemplate Pasture = new BuildingTemplate("Pasture", "Gives a set amount of food, varied on placement");

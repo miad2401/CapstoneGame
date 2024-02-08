@@ -45,8 +45,11 @@ public partial class BuildingTemplate : Node
     /// <param name="active">Building active state</param>
     /// <param name="jobs">Number of jobs</param>
     /// <param name="type">Type of building</param>
-    /// <param name="resource">Resource value</param>
+    /// <param name="resource">Type of resource</param>
     /// <param name="techUnlock">Unlocking tech ID</param>
+    /// <param name="validTerrain">List of valid terrain types</param>
+    /// <param name="bonus">Amount of bonus to resource</param>
+    /// <param name="costs">List of costs to build</param>
     public BuildingTemplate(string name, string description, bool active, int jobs, string type, int resource, int techUnlock, List<int> validTerrain, int bonus, ArrayList costs)
     {
         this.name = name;

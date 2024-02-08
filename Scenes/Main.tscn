@@ -192,7 +192,7 @@ size_flags_vertical = 0
 keep_pressed_outside = true
 text = "Build"
 script = ExtResource("3_ldlt2")
-BuildPanel = NodePath("../../../../../../Panels/BuildPanel")
+BuildPanel = NodePath("")
 
 [node name="Panels" type="Control" parent="UI"]
 layout_mode = 3
@@ -259,6 +259,7 @@ script = ExtResource("4_s26rl")
 
 [node name="TileMap" type="TileMap" parent="Map"]
 z_index = -1
+texture_filter = 1
 tile_set = SubResource("TileSet_8x41f")
 format = 2
 layer_0/name = "Terrain"
