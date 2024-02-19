@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildings>
+	<building>
+		<name></name>
+		<description></description>
+		<jobs></jobs>
+		<type></type>
+		<resources>
+			<resource></resource>
+		</resources>
+		<techUnlock></techUnlock>
+		<validTerrain>
+			<terrainId></terrainId>
+		</validTerrain>
+		<bonuses>
+			<bonus>
+				<resourceId></resourceId>
+				<numOfResource></numOfResource>
+			</bonus>
+		</bonuses>
+		<buildingCosts>
+			<Cost>
+				<resourceId></resourceId>
+				<numOfResource></numOfResource>
+			</Cost>
+		</buildingCosts>
+	</building>
+</buildings>

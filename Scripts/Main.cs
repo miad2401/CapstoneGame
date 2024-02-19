@@ -208,6 +208,10 @@ public partial class Main : Node2D
 		//Add list of buildings by tech
 		//TODO: Change building list to read from building list file which would have all building data rather than hard code
 		//TODO: Add rest of building data
+
+		//TODO: Insert file path of tech 0 buildings
+		readBuildingListFile("res://Assets/data/buildings_tier0.xml");
+
 		//Tech 0
 		List<int> genericValidTerrain = new List<int>();
 		genericValidTerrain.Add(0);
@@ -238,5 +242,29 @@ public partial class Main : Node2D
 		//Tech 2
 
 		//Tech 3
+	}
+
+	private void readBuildingListFile(string filepath)
+	{
+		/*var jsonAsText = FileAccess.GetFileAsString(filepath);
+
+		var jsonAsDict = Json.ParseString(jsonAsText);
+		GD.Print(jsonAsDict);*/
+
+		var parser = new XmlParser();
+		parser.Open(filepath);
+		while (parser.Read() != Error.FileEof)
+		{
+			if (parser.GetNodeType() == XmlParser.NodeType.Element)
+			{
+				var nodeName = parser.GetNodeName();
+				var attributesDict = new Godot.Collections.Dictionary();
+				for (int idx = 0; idx < parser.GetAttributeCount(); idx++)
+				{
+					attributesDict[parser.GetAttributeName(idx)] = parser.GetAttributeValue(idx);
+				}
+				GD.Print($"The {nodeName} element has the following attributes: {attributesDict}");
+			}
+		}
 	}
 }
