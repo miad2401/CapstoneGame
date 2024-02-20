@@ -2,6 +2,8 @@ using Godot;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Xml;
 
 public partial class Main : Node2D
 {
@@ -209,8 +211,8 @@ public partial class Main : Node2D
 		//TODO: Change building list to read from building list file which would have all building data rather than hard code
 		//TODO: Add rest of building data
 
-		//TODO: Insert file path of tech 0 buildings
-		readBuildingListFile("res://Assets/data/buildings_tier0.xml");
+		//Path of tech 0 buildings
+		Dictionary<string, Object> buildingsT0 = readBuildingListFile("res://Assets/data/buildings_tier0.xml");
 
 		//Tech 0
 		List<int> genericValidTerrain = new List<int>();
@@ -244,27 +246,61 @@ public partial class Main : Node2D
 		//Tech 3
 	}
 
-	private void readBuildingListFile(string filepath)
+	private Dictionary<string, Object> readBuildingListFile(string filepath)
 	{
-		/*var jsonAsText = FileAccess.GetFileAsString(filepath);
+		//Read file into plain text
+		var file = FileAccess.Open(filepath, FileAccess.ModeFlags.Read);
+		string XmlText = file.GetAsText();
+		file.Close();
 
-		var jsonAsDict = Json.ParseString(jsonAsText);
-		GD.Print(jsonAsDict);*/
-
-		var parser = new XmlParser();
-		parser.Open(filepath);
-		while (parser.Read() != Error.FileEof)
+		if (XmlText == null) 
 		{
-			if (parser.GetNodeType() == XmlParser.NodeType.Element)
-			{
-				var nodeName = parser.GetNodeName();
-				var attributesDict = new Godot.Collections.Dictionary();
-				for (int idx = 0; idx < parser.GetAttributeCount(); idx++)
-				{
-					attributesDict[parser.GetAttributeName(idx)] = parser.GetAttributeValue(idx);
-				}
-				GD.Print($"The {nodeName} element has the following attributes: {attributesDict}");
-			}
+			GD.Print("Failed to load building T0 file.");
 		}
+
+		GD.Print(XmlText);
+
+		//Create xml document from plain text
+		XmlDocument xmlDoc = new XmlDocument();
+		xmlDoc.LoadXml(XmlText);
+
+		XmlNode rootElement = xmlDoc.DocumentElement;
+		if (rootElement == null)
+		{
+			GD.Print("Failed to get root element of building T0 file.");
+			return null;
+		}
+		
+		Dictionary<string, Object> xmlDict = parseXmlElement(rootElement);
+		GD.Print(xmlDict); return xmlDict;
+
 	}
+
+	private Dictionary<string, Object> parseXmlElement(XmlNode xmlNode)
+	{
+        Dictionary<string, object> resultDict = new Dictionary<string, object>();
+        resultDict["name"] = xmlNode.Name;
+
+        //Parse child elements recursively
+        if (xmlNode.HasChildNodes)
+        {
+            List<object> childrenList = new List<object>();
+            foreach (XmlNode node in xmlNode.ChildNodes)
+            {
+                if (node.NodeType == XmlNodeType.Element)
+                {
+					childrenList.Add(parseXmlElement(node));
+
+                } else if (node.NodeType == XmlNodeType.Text)
+				{
+					childrenList.Add(node.InnerText);
+				}
+            }
+			if (childrenList.Count > 0)
+			{
+				resultDict["children"] = childrenList;
+			}
+        }
+		return resultDict;
+    }
 }

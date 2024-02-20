@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <buildings>
 	<building>
-		<name></name>
-		<description></description>
-		<jobs></jobs>
-		<type></type>
+		<name>Farm</name>
+		<description>Gives a set amount of food, varied on placement</description>
+		<jobs>2</jobs>
+		<type>Gatherer</type>
 		<resources>
-			<resource></resource>
+			<resource>6</resource>
 		</resources>
-		<techUnlock></techUnlock>
+		<techUnlock>0</techUnlock>
 		<validTerrain>
-			<terrainId></terrainId>
+			<terrainId>0</terrainId>
 		</validTerrain>
 		<bonuses>
 			<bonus>
-				<resourceId></resourceId>
-				<numOfResource></numOfResource>
+				<resourceId>6</resourceId>
+				<numOfResource>2</numOfResource>
 			</bonus>
 		</bonuses>
 		<buildingCosts>
 			<Cost>
-				<resourceId></resourceId>
-				<numOfResource></numOfResource>
+				<resourceId>0</resourceId>
+				<numOfResource>10</numOfResource>
 			</Cost>
+      <Cost>
+        <resourceId>1</resourceId>
+        <numOfResource>10</numOfResource>
+      </Cost>
 		</buildingCosts>
 	</building>
 </buildings>
