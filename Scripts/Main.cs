@@ -214,6 +214,9 @@ public partial class Main : Node2D
 		//Path of tech 0 buildings
 		Dictionary<string, Object> buildingsT0 = readBuildingListFile("res://Assets/data/buildings_tier0.xml");
 
+		//Parse dictionary and then create building objects from said dictionary
+		createBuildings(buildingsT0);
+
 		//Tech 0
 		List<int> genericValidTerrain = new List<int>();
 		genericValidTerrain.Add(0);
@@ -225,14 +228,14 @@ public partial class Main : Node2D
 
 
 
-		BuildingTemplate Farm = new BuildingTemplate("Farm", "Gives a set amount of food, varied on placement", false, 2, "Gatherer", 6, 0, genericValidTerrain, 2, farmCosts);
+		//BuildingTemplate Farm = new BuildingTemplate("Farm", "Gives a set amount of food, varied on placement", false, 2, "Gatherer", 6, 0, genericValidTerrain, 2, farmCosts);
 		BuildingTemplate Pasture = new BuildingTemplate("Pasture", "Gives a set amount of food, varied on placement");
 		BuildingTemplate Lumbermill = new BuildingTemplate("Lumbermill", "Produces a set amount of lumber");
 		BuildingTemplate Mine = new BuildingTemplate("Mine", "Produces a set amount of either stone or ore, depending on placement");
 		BuildingTemplate Quarry = new BuildingTemplate("Quarry", "Produces a set amount of stone");
 		BuildingTemplate Library = new BuildingTemplate("Library", "The first building that produces science and entertainment");
 
-		buildingList.Add(Farm);
+		//buildingList.Add(Farm);
 		buildingList.Add(Pasture);
 		buildingList.Add(Lumbermill);
 		buildingList.Add(Mine);	
@@ -246,6 +249,77 @@ public partial class Main : Node2D
 		//Tech 3
 	}
 
+	private void createBuildings(Dictionary<string, Object> buildingDict)
+	{
+		string name;
+		string description;
+		int jobs;
+		string type;
+		int resource;
+		int techUnlock;
+		List<int> validTerrain;
+		ArrayList bonus;
+		ArrayList costs;
+
+		//Get list of buildings as a list
+		List <Object> buildingList= (List<Object>)buildingDict["children"];
+		
+		//Iterate through all buildings
+		for(int i = 0; i < buildingList.Count; i++)
+		{
+            foreach (KeyValuePair<string, Object> ele in (Dictionary<string, Object>)buildingList[i])
+            {
+				//Go further if there is a building to parse
+				if (ele.Key == "children")
+				{
+                    List<Object> building = (List<Object>)ele.Value;
+					for (int j = 0; j < building.Count; j++)
+					{
+						Dictionary<string, Object> buildingEles = (Dictionary<string, Object>)building[j];
+						List<Object> buildingEle = (List<Object>)buildingEles["children"];
+						switch (buildingEles["name"])
+						{
+							case "name":
+								name = (string)buildingEle[0];
+								GD.Print(name);
+								break;
+							case "description":
+								description = (string)buildingEle[0];
+                                GD.Print(description); 
+								break;
+							case "jobs":
+								string jobsString = (string)buildingEle[0];
+								jobs = jobsString.ToInt();
+								GD.Print(jobs);
+								break;
+							case "resources":
+
+								break;
+							case "techUnlock":
+								string techUnlockString = (string)buildingEle[0];
+								techUnlock = techUnlockString.ToInt();
+								GD.Print(techUnlock);
+								break;
+							case "validTerrain":
+
+								break;
+							case "bonuses":
+
+								break;
+							case "buildingCosts":
+
+								break;
+						}
+					}
+				}
+                
+
+            }
+        }
+
+		
+	}
+
 	private Dictionary<string, Object> readBuildingListFile(string filepath)
 	{
 		//Read file into plain text
@@ -255,11 +329,8 @@ public partial class Main : Node2D
 
 		if (XmlText == null) 
 		{
-			GD.Print("Failed to load building T0 file.");
+			GD.Print("Failed to load building file.");
 		}
-
-		GD.Print(XmlText);
-
 		//Create xml document from plain text
 		XmlDocument xmlDoc = new XmlDocument();
 		xmlDoc.LoadXml(XmlText);
@@ -272,7 +343,7 @@ public partial class Main : Node2D
 		}
 		
 		Dictionary<string, Object> xmlDict = parseXmlElement(rootElement);
-		GD.Print(xmlDict); return xmlDict;
+		return xmlDict;
 
 	}
 

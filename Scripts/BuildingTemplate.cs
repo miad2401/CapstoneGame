@@ -13,7 +13,7 @@ public partial class BuildingTemplate : Node
     private int resource;
     private int techUnlock;
     private List<int> validTerrainID;
-    private int bonus;
+    private ArrayList bonus;
     private ArrayList costs;
 
     /// <summary>
@@ -31,7 +31,7 @@ public partial class BuildingTemplate : Node
         this.resource = 0;
         this.techUnlock = 0;
         this.validTerrainID = new List<int>();
-        this.bonus = 0;
+        this.bonus = new ArrayList();
         this.costs = new ArrayList();
 
         validTerrainID.Add(0);
@@ -50,7 +50,7 @@ public partial class BuildingTemplate : Node
     /// <param name="validTerrain">List of valid terrain types</param>
     /// <param name="bonus">Amount of bonus to resource</param>
     /// <param name="costs">List of costs to build</param>
-    public BuildingTemplate(string name, string description, bool active, int jobs, string type, int resource, int techUnlock, List<int> validTerrain, int bonus, ArrayList costs)
+    public BuildingTemplate(string name, string description, bool active, int jobs, string type, int resource, int techUnlock, List<int> validTerrain, ArrayList bonus, ArrayList costs)
     {
         this.name = name;
         this.description = description;

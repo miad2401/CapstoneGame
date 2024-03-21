@@ -23,10 +23,10 @@
 				<resourceId>0</resourceId>
 				<numOfResource>10</numOfResource>
 			</Cost>
-      <Cost>
-        <resourceId>1</resourceId>
-        <numOfResource>10</numOfResource>
-      </Cost>
+			<Cost>.
+				<resourceId>1</resourceId>
+				<numOfResource>10</numOfResource>
+			</Cost>
 		</buildingCosts>
 	</building>
 </buildings>
