@@ -5,16 +5,13 @@
 		<description>Gives a set amount of food, varied on placement</description>
 		<jobs>2</jobs>
 		<type>Gatherer</type>
-		<resources>
-			<resource>6</resource>
-		</resources>
 		<techUnlock>0</techUnlock>
 		<validTerrain>
 			<terrainId>0</terrainId>
 		</validTerrain>
 		<bonuses>
 			<bonus>
-				<resourceId>6</resourceId>
+				<resourceId>5</resourceId>
 				<numOfResource>2</numOfResource>
 			</bonus>
 		</bonuses>
@@ -23,9 +20,133 @@
 				<resourceId>0</resourceId>
 				<numOfResource>10</numOfResource>
 			</Cost>
-			<Cost>.
+			<Cost>
 				<resourceId>1</resourceId>
 				<numOfResource>10</numOfResource>
+			</Cost>
+		</buildingCosts>
+	</building>
+	<building>
+		<name>Pasture</name>
+		<description>Gives a set amount of food, varied on placement</description>
+		<jobs>2</jobs>
+		<type>Gatherer</type>
+		<techUnlock>0</techUnlock>
+		<validTerrain>
+			<terrainId>0</terrainId>
+			<terrainId>3</terrainId>
+		</validTerrain>
+		<bonuses>
+			<bonus>
+				<resourceId>5</resourceId>
+				<numOfResource>2</numOfResource>
+			</bonus>
+		</bonuses>
+		<buildingCosts>
+			<Cost>
+				<resourceId>0</resourceId>
+				<numOfResource>10</numOfResource>
+			</Cost>
+		</buildingCosts>
+	</building>
+	<building>
+		<name>Lumbermill</name>
+		<description>Produces a set amount of lumber</description>
+		<jobs>2</jobs>
+		<type>Producer</type>
+		<techUnlock>0</techUnlock>
+		<validTerrain>
+			<terrainId>0</terrainId>
+		</validTerrain>
+		<bonuses>
+			<bonus>
+				<resourceId>0</resourceId>
+				<numOfResource>5</numOfResource>
+			</bonus>
+		</bonuses>
+		<buildingCosts>
+			<Cost>
+				<resourceId>0</resourceId>
+				<numOfResource>10</numOfResource>
+			</Cost>
+			<Cost>
+				<resourceId>1</resourceId>
+				<numOfResource>10</numOfResource>
+			</Cost>
+		</buildingCosts>
+	</building>
+	<building>
+		<name>Mine</name>
+		<description>Produces a set amount of either stone or ore, depending on placement</description>
+		<jobs>2</jobs>
+		<type>Producer</type>
+		<techUnlock>0</techUnlock>
+		<validTerrain>
+			<terrainId>1</terrainId>
+		</validTerrain>
+		<bonuses>
+			<bonus>
+				<resourceId>1</resourceId>
+				<numOfResource>5</numOfResource>
+			</bonus>
+		</bonuses>
+		<buildingCosts>
+			<Cost>
+				<resourceId>1</resourceId>
+				<numOfResource>10</numOfResource>
+			</Cost>
+		</buildingCosts>
+	</building>
+	<building>
+		<name>Quarry</name>
+		<description>Produces a set amount of stone</description>
+		<jobs>2</jobs>
+		<type>Producer</type>
+		<techUnlock>0</techUnlock>
+		<validTerrain>
+			<terrainId>1</terrainId>
+		</validTerrain>
+		<bonuses>
+			<bonus>
+				<resourceId>1</resourceId>
+				<numOfResource>5</numOfResource>
+			</bonus>
+		</bonuses>
+		<buildingCosts>
+			<Cost>
+				<resourceId>1</resourceId>
+				<numOfResource>10</numOfResource>
+			</Cost>
+		</buildingCosts>
+	</building>
+	<building>
+		<name>Library</name>
+		<description>The first building that produces science and entertainment</description>
+		<jobs>1</jobs>
+		<type>Culture</type>
+		<techUnlock>0</techUnlock>
+		<validTerrain>
+			<terrainId>0</terrainId>
+			<terrainId>3</terrainId>
+		</validTerrain>
+		<bonuses>
+			<bonus>
+				<resourceId>9</resourceId>
+				<numOfResource>3</numOfResource>
+			</bonus>
+		</bonuses>
+		<buildingCosts>
+			<Cost>
+				<resourceId>0</resourceId>
+				<numOfResource>10</numOfResource>
+			</Cost>
+			<Cost>
+				<resourceId>1</resourceId>
+				<numOfResource>10</numOfResource>
+			</Cost>
+			<Cost>
+				<resourceId>3</resourceId>
+				<numOfResource>5</numOfResource>
 			</Cost>
 		</buildingCosts>
 	</building>

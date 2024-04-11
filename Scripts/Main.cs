@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Transactions;
 using System.Xml;
 
 public partial class Main : Node2D
@@ -217,30 +218,11 @@ public partial class Main : Node2D
 		//Parse dictionary and then create building objects from said dictionary
 		createBuildings(buildingsT0);
 
-		//Tech 0
-		List<int> genericValidTerrain = new List<int>();
-		genericValidTerrain.Add(0);
-
-		//Resource Costs for the farm
-		ArrayList farmCosts = new ArrayList();
-		farmCosts.Add(10);//10 wood
-		farmCosts.Add(10);//10 stone
-
-
-
-		//BuildingTemplate Farm = new BuildingTemplate("Farm", "Gives a set amount of food, varied on placement", false, 2, "Gatherer", 6, 0, genericValidTerrain, 2, farmCosts);
 		BuildingTemplate Pasture = new BuildingTemplate("Pasture", "Gives a set amount of food, varied on placement");
 		BuildingTemplate Lumbermill = new BuildingTemplate("Lumbermill", "Produces a set amount of lumber");
 		BuildingTemplate Mine = new BuildingTemplate("Mine", "Produces a set amount of either stone or ore, depending on placement");
 		BuildingTemplate Quarry = new BuildingTemplate("Quarry", "Produces a set amount of stone");
 		BuildingTemplate Library = new BuildingTemplate("Library", "The first building that produces science and entertainment");
-
-		//buildingList.Add(Farm);
-		buildingList.Add(Pasture);
-		buildingList.Add(Lumbermill);
-		buildingList.Add(Mine);	
-		buildingList.Add(Quarry);
-		buildingList.Add(Library);
 
 		//Tech 1
 
@@ -251,23 +233,22 @@ public partial class Main : Node2D
 
 	private void createBuildings(Dictionary<string, Object> buildingDict)
 	{
-		string name;
-		string description;
-		int jobs;
-		string type;
-		int resource;
-		int techUnlock;
-		List<int> validTerrain;
-		ArrayList bonus;
-		ArrayList costs;
+		string name = "";
+		string description = "";
+		int jobs = 0;
+		string type = "";
+		int techUnlock = 0;
+		List<int> validTerrain = new List<int>();
+		Dictionary<int, int> bonus = new Dictionary<int, int>();
+		Dictionary<int, int> costs = new Dictionary<int, int>();
 
 		//Get list of buildings as a list
-		List <Object> buildingList= (List<Object>)buildingDict["children"];
+		List <Object> fileBuildingList= (List<Object>)buildingDict["children"];
 		
 		//Iterate through all buildings
-		for(int i = 0; i < buildingList.Count; i++)
+		for(int i = 0; i < fileBuildingList.Count; i++)
 		{
-            foreach (KeyValuePair<string, Object> ele in (Dictionary<string, Object>)buildingList[i])
+            foreach (KeyValuePair<string, Object> ele in (Dictionary<string, Object>)fileBuildingList[i])
             {
 				//Go further if there is a building to parse
 				if (ele.Key == "children")
@@ -281,39 +262,104 @@ public partial class Main : Node2D
 						{
 							case "name":
 								name = (string)buildingEle[0];
-								GD.Print(name);
+								//GD.Print("Building name: " + name);
 								break;
 							case "description":
 								description = (string)buildingEle[0];
-                                GD.Print(description); 
+                                //GD.Print("Building description: " + description); 
 								break;
 							case "jobs":
 								string jobsString = (string)buildingEle[0];
 								jobs = jobsString.ToInt();
-								GD.Print(jobs);
-								break;
-							case "resources":
-
+								//GD.Print("Num of jobs: " + jobs);
 								break;
 							case "techUnlock":
 								string techUnlockString = (string)buildingEle[0];
 								techUnlock = techUnlockString.ToInt();
-								GD.Print(techUnlock);
+								//GD.Print("Tech unlock num: " + techUnlock);
 								break;
 							case "validTerrain":
-
+                                //iterate through subelement
+                                Dictionary<string, Object> buildingSubEles = (Dictionary<string, Object>)buildingEle[0];
+								List<Object> buildingSubEle = (List<Object>)buildingSubEles["children"];
+								foreach (object t in buildingSubEle)
+								{
+									string vTerrain = (string)t;
+                                    validTerrain.Add(vTerrain.ToInt());
+									//GD.Print("Valid terrain: " + vTerrain);
+                                }
 								break;
 							case "bonuses":
-
-								break;
+								foreach(object b in buildingEle)
+								{
+									Dictionary<string, Object> buildingSubEles2 = (Dictionary<string, Object>)b;
+									List<Object> bonusList = (List<Object>)buildingSubEles2["children"];
+									int resourceId = 0;
+									int numOfresource = 0;
+									for (int k = 0; k < bonusList.Count; k++) //bb is a dictionary of either resource id or numOfResource
+									{
+										Dictionary<string, Object> bonusItem = (Dictionary<string, Object>)bonusList[k];
+										if (k == 0) // 0 is resourceID, 1 is num
+										{
+											List<Object> bonusItemTxtL = (List<Object>)bonusItem["children"];
+											string bonusItemTxt = (string)bonusItemTxtL[0];
+											resourceId = bonusItemTxt.ToInt();
+                                        } else
+										{
+                                            List<Object> bonusItemTxtL = (List<Object>)bonusItem["children"];
+                                            string bonusItemTxt = (string)bonusItemTxtL[0];
+                                            numOfresource = bonusItemTxt.ToInt();
+                                        }
+									}
+									bonus.Add(resourceId, numOfresource);
+									//GD.Print("Bonuses: ID: " + resourceId + " | Num: " + numOfresource);
+                                }
+                                break;
 							case "buildingCosts":
-
+                                foreach (object c in buildingEle)
+                                {
+                                    Dictionary<string, Object> buildingSubEles2 = (Dictionary<string, Object>)c;
+                                    List<Object> costList = (List<Object>)buildingSubEles2["children"];
+                                    int resourceId = 0;
+                                    int numOfresource = 0;
+                                    for (int k = 0; k < costList.Count; k++) //bb is a dictionary of either resource id or numOfResource
+                                    {
+                                        Dictionary<string, Object> costItem = (Dictionary<string, Object>)costList[k];
+                                        if (k == 0) // 0 is resourceID, 1 is num
+                                        {
+                                            List<Object> costItemTxtL = (List<Object>)costItem["children"];
+                                            string costItemTxt = (string)costItemTxtL[0];
+                                            resourceId = costItemTxt.ToInt();
+                                        }
+                                        else
+                                        {
+                                            List<Object> costItemTxtL = (List<Object>)costItem["children"];
+                                            string costItemTxt = (string)costItemTxtL[0];
+                                            numOfresource = costItemTxt.ToInt();
+                                        }
+                                    }
+                                    costs.Add(resourceId, numOfresource);
+                                    //GD.Print("Costs: ID: " + resourceId + " | Num: " + numOfresource);
+                                }
+                                break;
+							case "type":
+								type = (string)buildingEle[0];
+								//GD.Print("Building type: " + type);
 								break;
 						}
 					}
-				}
-                
-
+                    BuildingTemplate buildingFromFile = new BuildingTemplate(name, description, false, jobs, type, techUnlock, validTerrain, bonus, costs);
+                    buildingList.Add(buildingFromFile);
+                    GD.Print("Building: " + name + " Added successfully.");
+					name = "";
+					description = "";
+					jobs = 0;
+					type = "";
+					techUnlock = 0;
+					validTerrain.Clear();
+					bonus.Clear();
+					costs.Clear();
+                }
             }
         }
 
