@@ -40,11 +40,11 @@ public partial class RegionMapHandler : TileMap
 			InputEventMouseButton mouseEvent = (InputEventMouseButton)mevent;
 			Vector2 pos = mouseEvent.Position;
 			Vector2I cell = map.LocalToMap(pos);
-			GD.Print("Mouse pos: " + pos + "\nCell pos:" + cell);
-
+			
 			//Update tiledata label with terrain data
 			Vector2I currTerrainCell = map.GetCellAtlasCoords(0, cell);
-			if ( currTerrainCell == grassCell)
+            GD.Print("Mouse pos: " + pos + "\nCell pos:" + cell + "\nTerrain ID:" + currTerrainCell);
+            if ( currTerrainCell == grassCell)
 			{
 				main.UpdateTileData("Grass", cell);
 			} else if (currTerrainCell == mountainCell)

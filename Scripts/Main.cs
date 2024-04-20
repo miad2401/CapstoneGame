@@ -27,6 +27,8 @@ public partial class Main : Node2D
 	[Export] Label TileData;
 	[Export] Label TileDataResource;
 
+	[Export] Label Turn;
+
 	//Values
 	int woodVal;
 	int stoneVal;
@@ -40,6 +42,8 @@ public partial class Main : Node2D
 	int totalPopVal;
 	int employedPopVal;
 	double growthVal;
+	double growthThresholdVal;
+	int turnVal;
 
 	[Export] TileMap regionMap;
 	struct ResourceNode { public int xPos; public int yPos; public bool activated; public bool worked; public string type;
@@ -60,6 +64,19 @@ public partial class Main : Node2D
 	public override void _Ready()
 	{
 		//Here we would set our inital values for our resources, based on difficulty selected.
+		woodVal = 40;
+		stoneVal = 40;
+		steelVal = 20;
+		fuelVal = 20;
+		foodVal = 100;
+		waterVal = 100;
+		weaponVal = 10;
+		leisureVal = 5;
+		totalPopVal = 20;
+		employedPopVal = 0;
+		growthVal = 5;
+		growthThresholdVal = 5;
+		turnVal = 0;
 
 		//Also populate our list of resource nodes with all current resource nodes
 		Vector2I woodResource = new Vector2I(0, 2);
@@ -108,6 +125,8 @@ public partial class Main : Node2D
 				// Update according resource
 			}
 		}
+
+		//Update labels every couple of seconds
 	}
 
 	//Change Label Data
@@ -118,40 +137,69 @@ public partial class Main : Node2D
 			case null:
 				break;
 			case "Wood":
-				Wood.Text = value.ToString();
-				break;
+				GD.Print("Wood before value: " + woodVal);
+                woodVal += value;
+                Wood.Text = "Wood: " + woodVal.ToString();
+                GD.Print("Wood after value: " + woodVal);
+                break;
 			case "Stone":
-				Stone.Text = value.ToString();
+                stoneVal += value;
+                Stone.Text = "Stone: " + stoneVal.ToString();
+				
 				break;
 			case "Copper":
-				Copper.Text = value.ToString();
+                copperVal += value;
+                Copper.Text = "Copper: " + copperVal.ToString();
+				
 				break;
 			case "steel":
-				Steel.Text = value.ToString();
+                steelVal += value;
+                Steel.Text = "Steel: " + steelVal.ToString();
+				
 				break;
 			case "fuel":
-				Fuel.Text = value.ToString();
+                fuelVal += value;
+                Fuel.Text = "Fuel: " + fuelVal.ToString();
+				
 				break;
 			case "food":
-				Food.Text = value.ToString();
+                foodVal += value;
+                Food.Text = "Food: " + foodVal.ToString();
+				
 				break;
 			case "water":
-				Water.Text = value.ToString();
+                waterVal += value;
+                Water.Text = "Water: " + waterVal.ToString();
+				
 				break;
 			case "weapon":
-				Weapons.Text = value.ToString();
+                weaponVal += value;
+                Weapons.Text = "Weapons: " + weaponVal.ToString();
+				
 				break;
 			case "leisure":
-				Leisure.Text = value.ToString();
+                leisureVal += value;
+                Leisure.Text = "Leisure: " + leisureVal.ToString();
+				
 				break;
 			case "totalPop":
-				TotalPop.Text = value.ToString();
+                totalPopVal += value;
+                TotalPop.Text = "Total Population: " + totalPopVal.ToString();
+				
 				break;
 			case "employedPop":
-				EmployedPop.Text = value.ToString();
+                employedPopVal += value;
+                EmployedPop.Text = "Population Employed: " + employedPopVal.ToString();
+				
 				break;
 			case "growth":
-				Growth.Text = value.ToString();
+                growthVal += value;
+                Growth.Text = "New pop in: " + growthVal.ToString();
+				
+				break;
+			case "turn":
+				turnVal += value;
+				Turn.Text = turnVal.ToString();
 				break;
 		}
 	}
@@ -193,8 +241,6 @@ public partial class Main : Node2D
 		}
 	}
 
-
-
 	// Current cell getter and setter
 	public Vector2I GetCurrCell()
 	{
@@ -209,21 +255,12 @@ public partial class Main : Node2D
 	private void createBuildingList()
 	{
 		//Add list of buildings by tech
-		//TODO: Change building list to read from building list file which would have all building data rather than hard code
-		//TODO: Add rest of building data
 
 		//Path of tech 0 buildings
 		Dictionary<string, Object> buildingsT0 = readBuildingListFile("res://Assets/data/buildings_tier0.xml");
 
 		//Parse dictionary and then create building objects from said dictionary
 		createBuildings(buildingsT0);
-
-		BuildingTemplate Pasture = new BuildingTemplate("Pasture", "Gives a set amount of food, varied on placement");
-		BuildingTemplate Lumbermill = new BuildingTemplate("Lumbermill", "Produces a set amount of lumber");
-		BuildingTemplate Mine = new BuildingTemplate("Mine", "Produces a set amount of either stone or ore, depending on placement");
-		BuildingTemplate Quarry = new BuildingTemplate("Quarry", "Produces a set amount of stone");
-		BuildingTemplate Library = new BuildingTemplate("Library", "The first building that produces science and entertainment");
-
 		//Tech 1
 
 		//Tech 2
@@ -279,17 +316,23 @@ public partial class Main : Node2D
 								//GD.Print("Tech unlock num: " + techUnlock);
 								break;
 							case "validTerrain":
-                                //iterate through subelement
-                                Dictionary<string, Object> buildingSubEles = (Dictionary<string, Object>)buildingEle[0];
-								List<Object> buildingSubEle = (List<Object>)buildingSubEles["children"];
-								foreach (object t in buildingSubEle)
+								//iterate through subelement
+								//reset list
+								validTerrain.Clear();
+								foreach(object t in buildingEle)
 								{
-									string vTerrain = (string)t;
-                                    validTerrain.Add(vTerrain.ToInt());
-									//GD.Print("Valid terrain: " + vTerrain);
+                                    Dictionary<string, Object> buildingSubEles = (Dictionary<string, Object>)t;
+                                    List<Object> buildingSubEle = (List<Object>)buildingSubEles["children"];
+                                    foreach (object vt in buildingSubEle)
+                                    {
+                                        string vTerrain = (string)vt;
+                                        validTerrain.Add(vTerrain.ToInt());
+                                        //GD.Print("Valid terrain: " + vTerrain + " |Total valid terrain: " + validTerrain.Count);
+                                    }
                                 }
 								break;
 							case "bonuses":
+								bonus.Clear();
 								foreach(object b in buildingEle)
 								{
 									Dictionary<string, Object> buildingSubEles2 = (Dictionary<string, Object>)b;
@@ -316,6 +359,7 @@ public partial class Main : Node2D
                                 }
                                 break;
 							case "buildingCosts":
+								costs.Clear();
                                 foreach (object c in buildingEle)
                                 {
                                     Dictionary<string, Object> buildingSubEles2 = (Dictionary<string, Object>)c;
@@ -348,23 +392,13 @@ public partial class Main : Node2D
 								break;
 						}
 					}
-                    BuildingTemplate buildingFromFile = new BuildingTemplate(name, description, false, jobs, type, techUnlock, validTerrain, bonus, costs);
+                    BuildingTemplate buildingFromFile = new BuildingTemplate(name, description, false, jobs, type, techUnlock, new List<int>(validTerrain), new Dictionary<int, int>(bonus), new Dictionary<int, int>(costs));
                     buildingList.Add(buildingFromFile);
                     GD.Print("Building: " + name + " Added successfully.");
-					name = "";
-					description = "";
-					jobs = 0;
-					type = "";
-					techUnlock = 0;
-					validTerrain.Clear();
-					bonus.Clear();
-					costs.Clear();
                 }
             }
         }
-
-		
-	}
+    }
 
 	private Dictionary<string, Object> readBuildingListFile(string filepath)
 	{
