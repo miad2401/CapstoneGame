@@ -34,6 +34,7 @@ public partial class BuildButtonHandler : Button
 
 	public void handleButtonPress()
 	{
+		// TODO: remove current building selection
 		BuildPanel.Visible = !BuildPanel.Visible;
 		if(BuildPanel.Visible)
 		{

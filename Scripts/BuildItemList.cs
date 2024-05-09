@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 
@@ -41,8 +42,10 @@ public partial class BuildItemList : ItemList
 	
 	BuildingTemplate pickedBuilding;
 	[Export] Button confirmButton;
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+
+	List<Main.ResourceNode> resourceNodes;
+    // Called when the node enters the scene tree for the first time.
+    public override void _Ready()
 	{
 		//Get root node
 		main = GetNode<Main>("/root/Main");
@@ -51,6 +54,7 @@ public partial class BuildItemList : ItemList
 		listPopulated = false;
 		placedBuildingList = new Dictionary<Vector2I, BuildingTemplate>();
 		currentValidBuildingList= new List<BuildingTemplate>();
+		resourceNodes = main.resourceNodes;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -91,7 +95,7 @@ public partial class BuildItemList : ItemList
 					PopulateListForTerrain(plainsCell);
 				}//Then check if there is a resource on that cell as well
 
-				//TODO: Add resource checking - UNNEEDED
+				//TODO: Add resource checking
 /*				if (currAtlasResourceCoords == new Vector2I(-1, -1))
 				{
 
@@ -161,18 +165,30 @@ public partial class BuildItemList : ItemList
             GD.Print("Library placed @ tile: " + currentCell.ToString());
             map.SetCell(2, currentCell, 0, libraryCell);
         }
+		//Now check if building is placed over resource tile and set the tile to worked.
+		for(int i = 0; i < resourceNodes.Count; i++)
+		{
+			Main.ResourceNode res = resourceNodes[i];
+			if (res.yPos == currentCell.Y && res.xPos == currentCell.X)
+			{
+				GD.Print("Resource node is now being worked.");
+                res.activated = true;
+				res.worked = true;
+			}
+			resourceNodes[i] = res;
+		}
+		//Update the main class's list of resource nodes
+		main.resourceNodes = resourceNodes;
 
 		//Now subtract resources
 		Dictionary<int, int> buildingCosts = pickedBuilding.Costs;
 		
 		if (buildingCosts.ContainsKey(0)) // Wood
 		{
-			GD.Print("Wood cost: " + -buildingCosts[0]);
 			main.UpdateLabel("Wood", -buildingCosts[0]);
 		}
 		if (buildingCosts.ContainsKey(1)) // Stone
 		{
-            GD.Print("Stone cost: " + -buildingCosts[1]);
             main.UpdateLabel("Stone", -buildingCosts[1]);
         }
         if (buildingCosts.ContainsKey(2)) // Copper
@@ -186,5 +202,6 @@ public partial class BuildItemList : ItemList
 
 		//Update Jobs
 		main.UpdateLabel("employedPop", pickedBuilding.Jobs);
+		pickedBuilding.Active = true;
     }
 }

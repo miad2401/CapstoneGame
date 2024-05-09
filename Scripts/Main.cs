@@ -2,8 +2,6 @@ using Godot;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Transactions;
 using System.Xml;
 
 public partial class Main : Node2D
@@ -29,54 +27,79 @@ public partial class Main : Node2D
 
 	[Export] Label Turn;
 
-	//Values
-	int woodVal;
-	int stoneVal;
-	int copperVal;
-	int steelVal;
-	int fuelVal;
-	int foodVal;
-	int waterVal;
-	int weaponVal;
-	int leisureVal;
-	int totalPopVal;
-	int employedPopVal;
-	double growthVal;
-	double growthThresholdVal;
-	int turnVal;
+    //Values
+    private int woodVal;
+    private int stoneVal;
+    private int copperVal;
+    private int steelVal;
+    private int fuelVal;
+    private int foodVal;
+    private int waterVal;
+    private int weaponVal;
+    private int leisureVal;
+    private int totalPopVal;
+    private int employedPopVal;
+    private double growthVal;
+    private double growthThresholdVal;
+    private int turnVal;
+	private int researchVal;
 
-	[Export] TileMap regionMap;
-	struct ResourceNode { public int xPos; public int yPos; public bool activated; public bool worked; public string type;
+    [Export] TileMap regionMap;
+	public struct ResourceNode { public int xPos; public int yPos; public bool activated; public bool worked; public string type;
 		public ResourceNode(int x, int y, bool active, bool working, string resType)
 		{
 			xPos = x; yPos = y; activated = active; worked = working; type = resType;
 		}
 	};
-	ArrayList resourceNodes = new ArrayList();
+	public List<ResourceNode> resourceNodes = new List<ResourceNode>();
 
 	private Vector2I currCell = new Vector2I();
 
 	public List<BuildingTemplate> buildingList = new List<BuildingTemplate>();
 
-	#endregion
+	public List<GovernmentTemplate> govs = new List<GovernmentTemplate>();
+	public GovernmentTemplate currGov;
 
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+	public List<PartyTemplate> parties = new List<PartyTemplate>();
+	public List<LawTemplate> availableLaws;
+	public List<LawTemplate> enactedLaws;
+
+    public int WoodVal { get => woodVal; set => woodVal = value; }
+    public int StoneVal { get => stoneVal; set => stoneVal = value; }
+    public int CopperVal { get => copperVal; set => copperVal = value; }
+    public int SteelVal { get => steelVal; set => steelVal = value; }
+    public int FuelVal { get => fuelVal; set => fuelVal = value; }
+    public int FoodVal { get => foodVal; set => foodVal = value; }
+    public int WaterVal { get => waterVal; set => waterVal = value; }
+    public int WeaponVal { get => weaponVal; set => weaponVal = value; }
+    public int LeisureVal { get => leisureVal; set => leisureVal = value; }
+    public int TotalPopVal { get => totalPopVal; set => totalPopVal = value; }
+    public int EmployedPopVal { get => employedPopVal; set => employedPopVal = value; }
+    public double GrowthVal { get => growthVal; set => growthVal = value; }
+    public double GrowthThresholdVal { get => growthThresholdVal; set => growthThresholdVal = value; }
+    public int TurnVal { get => turnVal; set => turnVal = value; }
+	public int ResearchVal { get => researchVal; set => researchVal = value; }
+
+    #endregion
+
+    // Called when the node enters the scene tree for the first time.
+    public override void _Ready()
 	{
 		//Here we would set our inital values for our resources, based on difficulty selected.
 		woodVal = 40;
 		stoneVal = 40;
 		steelVal = 20;
 		fuelVal = 20;
-		foodVal = 100;
+		foodVal = 20;
 		waterVal = 100;
 		weaponVal = 10;
 		leisureVal = 5;
 		totalPopVal = 20;
 		employedPopVal = 0;
 		growthVal = 5;
-		growthThresholdVal = 5;
-		turnVal = 0;
+		growthThresholdVal = 40;
+		turnVal = 1;
+		researchVal = 0;
 
 		//Also populate our list of resource nodes with all current resource nodes
 		Vector2I woodResource = new Vector2I(0, 2);
@@ -111,22 +134,39 @@ public partial class Main : Node2D
 
 		//Create Building directory
 		createBuildingList();
-	}
+
+		//Create government list
+		GovernmentTemplate monarchy = new GovernmentTemplate("monarchy", (Texture2D)GD.Load("res://Assets/Art/MonarchyIcon.png"), new List<string>() {"-Increased happiness when food production is positive", "-Increased resource output" }, new List<string>());
+		govs.Add(monarchy);
+		currGov = monarchy;
+		GD.Print("Government added: " + monarchy.GovName);
+
+		GovernmentTemplate oligarchy = new GovernmentTemplate("oligarchy", (Texture2D)GD.Load("res://Assets/Art/OligarchyIcon.png"), new List<string>() {"-Large increase to resource output", "-Increased happiness due to abundance of resources", "-Slight decrease in fuel per turn"}, new List<string>());
+		govs.Add(oligarchy);
+        GD.Print("Government added: " + oligarchy.GovName);
+
+		//Create party list
+		PartyTemplate survivors = new PartyTemplate("Survivor's Nexus", 10, new List<string>() {"Stable food production", "Full employment"}, "Content", new List<string>() {});
+		parties.Add(survivors);
+		GD.Print("Party added: " + survivors.PartyName);
+
+		//Add Laws
+		availableLaws = new List<LawTemplate>();
+		enactedLaws = new List<LawTemplate>();
+		LawTemplate law1 = new LawTemplate("No rest for the weary", "Requires all population to work twice as hard, at the cost of happiness and extra food consumption", 1);
+		LawTemplate law2 = new LawTemplate("Fuel Rations", "Ration out fuel, lessening fuel consumption but costing happiness", 2);
+		LawTemplate law3 = new LawTemplate("Food Rations", "Ration out food, lessening food consumption but costing water", 3);
+		LawTemplate law4 = new LawTemplate("Public duels", "Allow dueling, distributing weapons and increasing happiness but has a chance to lose a pop", 4);
+		availableLaws.Add(law1);
+		availableLaws.Add(law2);
+		availableLaws.Add(law3);
+		availableLaws.Add(law4);
+    }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		//TODO: Finish Logic
-		//Check for enabled resource nodes and then check to see if they are being worked
-		foreach(ResourceNode node in resourceNodes)
-		{
-			if(node.activated == true && node.worked)
-			{
-				// Update according resource
-			}
-		}
 
-		//Update labels every couple of seconds
 	}
 
 	//Change Label Data
@@ -137,10 +177,8 @@ public partial class Main : Node2D
 			case null:
 				break;
 			case "Wood":
-				GD.Print("Wood before value: " + woodVal);
                 woodVal += value;
                 Wood.Text = "Wood: " + woodVal.ToString();
-                GD.Print("Wood after value: " + woodVal);
                 break;
 			case "Stone":
                 stoneVal += value;
@@ -178,7 +216,7 @@ public partial class Main : Node2D
 				
 				break;
 			case "leisure":
-                leisureVal += value;
+                leisureVal = value;
                 Leisure.Text = "Leisure: " + leisureVal.ToString();
 				
 				break;
@@ -193,13 +231,13 @@ public partial class Main : Node2D
 				
 				break;
 			case "growth":
-                growthVal += value;
+                growthVal = value;
                 Growth.Text = "New pop in: " + growthVal.ToString();
 				
 				break;
 			case "turn":
 				turnVal += value;
-				Turn.Text = turnVal.ToString();
+				Turn.Text = "Turn: " + turnVal.ToString();
 				break;
 		}
 	}
