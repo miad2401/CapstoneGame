@@ -61,6 +61,7 @@ public partial class TurnHandler : Button
         int totalfarmNum = 0;
         int duelDeathChance = 0;
         int totalWeaponBonus = 0;
+        int totalResearchBonus = 0;
 
         foreach (var item in placedBuildingList) //Iterate through placed buildings, totaling bonuses. (Check if building is active before adding)
         {
@@ -103,6 +104,14 @@ public partial class TurnHandler : Button
                             totalWaterBonus += bonus.Value;
 
                             break;
+                        case 8:
+                            totalLeisure += bonus.Value;
+
+                            break;
+                        case 9:
+                            totalResearchBonus += bonus.Value;
+
+                            break;
                     }
                 }
             }
@@ -137,7 +146,7 @@ public partial class TurnHandler : Button
             //Goto function for calculating monarchy bonuses/costs
             if (totalFoodBonus > 0)
             {
-                totalLeisure = 7; // Base is 5, 2 is the bonus from monarchy
+                totalLeisure += 7; // Base is 5, 2 is the bonus from monarchy
             }
             totalStoneBonus *= 2;
             totalWoodBonus *= 2;
@@ -148,7 +157,7 @@ public partial class TurnHandler : Button
             totalStoneBonus *= 3;
             totalWoodBonus *= 3;
             totalCopperBonus *= 3;
-            totalLeisure = 9;
+            totalLeisure += 9;
             totalFuelBonus -= 3;
         }
 
@@ -273,8 +282,6 @@ public partial class TurnHandler : Button
         //Now update main list with updated values.
         main.parties = parties;
 
-        
-
         //Update values with bonuses
         main.UpdateLabel("Wood", totalWoodBonus);
         main.UpdateLabel("Stone", totalStoneBonus);
@@ -285,6 +292,17 @@ public partial class TurnHandler : Button
         main.UpdateLabel("water", totalWaterBonus);
         main.UpdateLabel("leisure", totalLeisure);
         main.UpdateLabel("weapon", totalWeaponBonus);
+        main.ResearchVal += totalResearchBonus;
+
+        if (main.ResearchVal > 100 && main.ResearchVal < 200)
+        {
+            main.Tier = 1;
+            main.createBuildingList();
+        } else if (main.ResearchVal > 200)
+        {
+            main.Tier = 2;
+            main.createBuildingList();
+        }
     }
 
     

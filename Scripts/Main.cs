@@ -43,6 +43,7 @@ public partial class Main : Node2D
     private double growthThresholdVal;
     private int turnVal;
 	private int researchVal;
+	private int tier = 0;
 
     [Export] TileMap regionMap;
 	public struct ResourceNode { public int xPos; public int yPos; public bool activated; public bool worked; public string type;
@@ -79,6 +80,7 @@ public partial class Main : Node2D
     public double GrowthThresholdVal { get => growthThresholdVal; set => growthThresholdVal = value; }
     public int TurnVal { get => turnVal; set => turnVal = value; }
 	public int ResearchVal { get => researchVal; set => researchVal = value; }
+	public int Tier { get => tier; set => tier = value; }
 
     #endregion
 
@@ -290,20 +292,26 @@ public partial class Main : Node2D
 		currCell = newCoords;
 	}
 
-	private void createBuildingList()
+	public void createBuildingList()
 	{
 		//Add list of buildings by tech
 
 		//Path of tech 0 buildings
 		Dictionary<string, Object> buildingsT0 = readBuildingListFile("res://Assets/data/buildings_tier0.xml");
+        Dictionary<string, Object> buildingsT1 = readBuildingListFile("res://Assets/data/buildings_tier1.xml");
 
-		//Parse dictionary and then create building objects from said dictionary
-		createBuildings(buildingsT0);
-		//Tech 1
+        switch (tier)
+		{
+			case 0:
+                createBuildings(buildingsT0);
+                break;
+			case 1:
+				createBuildings(buildingsT1);
+				break;
+			case 2:
 
-		//Tech 2
-
-		//Tech 3
+				break;
+		}
 	}
 
 	private void createBuildings(Dictionary<string, Object> buildingDict)

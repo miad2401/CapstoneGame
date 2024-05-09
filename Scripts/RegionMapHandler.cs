@@ -115,7 +115,7 @@ public partial class RegionMapHandler : TileMap
                 Transform2D mapLocTrans = mapLoc.Translated(mousePos - mouseEvent.GlobalPosition);
                 Transform = mapLocTrans;
                 mapLoc = GetGlobalTransform();
-                // TODO: impove on code to make movement not give me headaches
+                // impove on code to make movement not give me headaches
             }
         }*/
 	}
